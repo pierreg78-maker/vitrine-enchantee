@@ -1,25 +1,575 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Vitrine Enchantée” Profils</title>
-<style>
-*{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Arial,sans-serif;color:#4a351f;background:linear-gradient(145deg,#fff8e7,#f2dec0);padding:18px}.app{width:min(680px,100%);margin:auto}.entete{text-align:center;padding:20px 12px}h1{margin:0 0 8px;font-size:clamp(1.7rem,7vw,2.5rem)}.carte{background:#fffffff0;border:2px solid #e3c38e;border-radius:20px;padding:18px;box-shadow:0 8px 25px #573a1921;margin-bottom:16px}.statut{min-height:26px;text-align:center;font-weight:bold;margin-bottom:10px}.erreur{color:#b83232}.succes{color:#267a48}.profils{display:grid;gap:10px}.profil{width:100%;border:2px solid #ead6b4;background:#fffaf1;border-radius:14px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;text-align:left;font-size:1rem}.nom{font-size:1.15rem;font-weight:800}.solde{font-size:1.1rem;font-weight:800;color:#9b681e}form{display:grid;grid-template-columns:1fr auto;gap:10px}input,button{min-height:52px;border-radius:13px;font-size:1rem}input{width:100%;border:2px solid #d7bd93;padding:0 14px}button{border:0;padding:0 18px;font-weight:800;cursor:pointer}.ajouter{background:#8e5d26;color:#fff}.selection{display:none;text-align:center}.selection.visible{display:block}.avatar{font-size:3rem}.continuer{background:#2f7d50;color:#fff;width:100%;margin-top:12px}.changer{background:transparent;color:#765126;text-decoration:underline;min-height:42px}.note{font-size:.88rem;line-height:1.45;color:#765f49}@media(max-width:480px){body{padding:10px}.carte{padding:14px}form{grid-template-columns:1fr}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitrine Enchantée — Profils</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: #4a351f;
+      background:
+        radial-gradient(circle at top, rgba(255,255,255,.9), transparent 42%),
+        linear-gradient(145deg, #fff8e7, #f2dec0);
+      padding: 18px;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .app {
+      width: min(700px, 100%);
+      margin: auto;
+    }
+
+    .entete {
+      text-align: center;
+      padding: 20px 12px;
+    }
+
+    .entete h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.8rem, 7vw, 2.7rem);
+    }
+
+    .entete p {
+      margin: 0;
+      font-size: 1.08rem;
+    }
+
+    .carte {
+      background: rgba(255,255,255,.94);
+      border: 2px solid #e3c38e;
+      border-radius: 22px;
+      padding: 20px;
+      box-shadow: 0 9px 28px rgba(87,58,25,.14);
+      margin-bottom: 16px;
+    }
+
+    .statut {
+      min-height: 28px;
+      text-align: center;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .statut.erreur {
+      color: #b83232;
+    }
+
+    .statut.succes {
+      color: #267a48;
+    }
+
+    .profils {
+      display: grid;
+      gap: 11px;
+    }
+
+    .profil {
+      width: 100%;
+      min-height: 68px;
+      border: 2px solid #ead6b4;
+      background: #fffaf1;
+      border-radius: 16px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      text-align: left;
+      color: inherit;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+
+    .profil:hover,
+    .profil:focus-visible {
+      transform: translateY(-1px);
+      border-color: #bd8b45;
+      outline: none;
+    }
+
+    .nom {
+      font-size: 1.18rem;
+      font-weight: 800;
+    }
+
+    .solde {
+      white-space: nowrap;
+      font-size: 1.08rem;
+      font-weight: 800;
+      color: #9b681e;
+    }
+
+    form {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+    }
+
+    input,
+    .ajouter,
+    .continuer {
+      min-height: 54px;
+      border-radius: 14px;
+      font-size: 1rem;
+    }
+
+    input {
+      width: 100%;
+      border: 2px solid #d7bd93;
+      padding: 0 15px;
+      color: #4a351f;
+      background: #fff;
+    }
+
+    input:focus {
+      outline: 3px solid rgba(190,139,69,.2);
+      border-color: #bd8b45;
+    }
+
+    .ajouter,
+    .continuer {
+      border: 0;
+      padding: 0 20px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .ajouter {
+      background: #8e5d26;
+    }
+
+    .selection {
+      display: none;
+      text-align: center;
+    }
+
+    .selection.visible {
+      display: block;
+    }
+
+    .avatar {
+      font-size: 3.3rem;
+    }
+
+    .selection h2 {
+      margin: 8px 0;
+      font-size: 1.8rem;
+    }
+
+    .cagnotte {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin: 8px 0 10px;
+      padding: 12px 18px;
+      border-radius: 16px;
+      background: #fff7d9;
+      border: 2px solid #e8c95d;
+      font-size: 1.2rem;
+    }
+
+    .piece {
+      font-size: 1.5rem;
+    }
+
+    .continuer {
+      width: 100%;
+      margin-top: 12px;
+      background: #2f7d50;
+    }
+
+    .changer {
+      min-height: 44px;
+      border: 0;
+      background: transparent;
+      color: #765126;
+      text-decoration: underline;
+      font-weight: 700;
+    }
+
+    .note {
+      font-size: .9rem;
+      line-height: 1.5;
+      color: #765f49;
+    }
+
+    .actualiser {
+      display: block;
+      margin: 12px auto 0;
+      border: 0;
+      background: transparent;
+      color: #765126;
+      text-decoration: underline;
+      font-weight: 700;
+    }
+
+    .chargement {
+      opacity: .65;
+      pointer-events: none;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      .carte {
+        padding: 15px;
+      }
+
+      form {
+        grid-template-columns: 1fr;
+      }
+
+      .profil {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
-<body><main class="app"><header class="entete"><h1>Vitrine Enchantée</h1><p>Qui joue aujourd'hui ?</p></header>
-<section class="carte selection" id="selectionActive"><div class="avatar">ðŸ‘¤</div><h2 id="nomActif"></h2><p>Votre cagnotte : <strong id="soldeActif">0 â‚¬</strong></p><button class="continuer" id="continuerBtn">Entrer dans la vitrine</button><button class="changer" id="changerBtn">Changer de joueur</button></section>
-<section id="choixProfils"><div class="carte"><div class="statut" id="statut">Chargement des profils</div><div class="profils" id="listeProfils"></div></div><div class="carte"><h2>Ajouter une personne</h2><form id="formProfil"><input id="prenom" maxlength="30" autocomplete="off" placeholder="Entrez un prénom" required><button class="ajouter">Ajouter</button></form><p class="note">Le prénom doit être unique. Un identifiant invisible est créé automatiquement.</p></div></section></main>
-<script>
-const API_URL='https://script.google.com/macros/s/AKfycbyh1LbQNETMy0GS7A5SzACTPMYlFEal9W3-XZozkwzIkAAUhlo_InN-5FOrI9eEqPoEeA/exec';
-const cle='vitrineProfilActif';
-const e={statut:document.getElementById('statut'),liste:document.getElementById('listeProfils'),form:document.getElementById('formProfil'),prenom:document.getElementById('prenom'),choix:document.getElementById('choixProfils'),selection:document.getElementById('selectionActive'),nom:document.getElementById('nomActif'),solde:document.getElementById('soldeActif')};
-function statut(m,t=''){e.statut.textContent=m;e.statut.className='statut '+t}function euros(n){return new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(Number(n)||0)}
-async function get(action,p={}){const u=new URL(API_URL);u.searchParams.set('action',action);Object.entries(p).forEach(([k,v])=>u.searchParams.set(k,v));const r=await fetch(u);return r.json()}
-async function post(d){const r=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(d)});return r.json()}
-function selectionner(p){localStorage.setItem(cle,JSON.stringify({id:p.id,prenom:p.prenom}));e.nom.textContent=p.prenom;e.solde.textContent=euros(p.solde);e.selection.classList.add('visible');e.choix.hidden=true}
-function afficher(profils){e.liste.innerHTML='';statut(profils.length?profils.length+' profil(s)':'Aucun profil. Ajoutez le premier prÃ©nom.');profils.forEach(p=>{const b=document.createElement('button');b.className='profil';b.innerHTML='<span class="nom"></span><span class="solde"></span>';b.children[0].textContent='ðŸ‘¤ '+p.prenom;b.children[1].textContent=euros(p.solde);b.onclick=()=>selectionner(p);e.liste.appendChild(b)});const m=JSON.parse(localStorage.getItem(cle)||'null');const p=profils.find(x=>m&&x.id===m.id);if(p)selectionner(p)}
-async function charger(){if(!API_URL.startsWith('https://script.google.com/macros/s/'))return statut('Ajoutez votre URL Apps Script dans API_URL.','erreur');try{const r=await get('listerProfils');if(!r.ok)throw Error(r.erreur);afficher(r.profils)}catch(err){statut(err.message,'erreur')}}
-e.form.onsubmit=async ev=>{ev.preventDefault();try{statut('CrÃ©ationâ€¦');const r=await post({action:'creerProfil',prenom:e.prenom.value.trim()});if(!r.ok)throw Error(r.erreur);e.form.reset();await charger();selectionner(r.profil)}catch(err){statut(err.message,'erreur')}};
-document.getElementById('changerBtn').onclick=()=>{localStorage.removeItem(cle);e.selection.classList.remove('visible');e.choix.hidden=false};document.getElementById('continuerBtn').onclick=()=>alert('Profil sélectionné ! La vitrine arrivera Ã  l'étape suivante.');charger();
-</script></body></html>
+
+<body>
+  <main class="app">
+    <header class="entete">
+      <h1>✨ Vitrine Enchantée ✨</h1>
+      <p>Qui joue aujourd’hui ?</p>
+    </header>
+
+    <section class="carte selection" id="selectionActive">
+      <div class="avatar">👤</div>
+      <h2 id="nomActif"></h2>
+
+      <div class="cagnotte">
+        <span class="piece">🪙</span>
+        <strong id="soldeActif">0 pièce d’or</strong>
+      </div>
+
+      <button class="continuer" id="continuerBtn" type="button">
+        Entrer dans la vitrine
+      </button>
+
+      <button class="changer" id="changerBtn" type="button">
+        Changer de joueur
+      </button>
+    </section>
+
+    <section id="choixProfils">
+      <div class="carte">
+        <div class="statut" id="statut">Chargement des profils…</div>
+        <div class="profils" id="listeProfils"></div>
+
+        <button class="actualiser" id="actualiserBtn" type="button">
+          Actualiser les profils
+        </button>
+      </div>
+
+      <div class="carte">
+        <h2>Ajouter une personne</h2>
+
+        <form id="formProfil">
+          <input
+            id="prenom"
+            maxlength="30"
+            autocomplete="off"
+            placeholder="Entrez un prénom"
+            required
+          >
+          <button class="ajouter" id="ajouterBtn" type="submit">
+            Ajouter
+          </button>
+        </form>
+
+        <p class="note">
+          Le prénom doit être unique. Un identifiant invisible est créé automatiquement.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const API_URL =
+      'https://script.google.com/macros/s/AKfycbyh1LbQNETMy0GS7A5SzACTPMYlFEal9W3-XZozkwzIkAAUhlo_InN-5FOrI9eEqPoEeA/exec';
+
+    const URL_VITRINE =
+      'https://pierreg78-maker.github.io/vitrine-enchantee/';
+
+    const CLE_PROFIL = 'vitrineProfilActif';
+
+    const elements = {
+      statut: document.getElementById('statut'),
+      liste: document.getElementById('listeProfils'),
+      form: document.getElementById('formProfil'),
+      prenom: document.getElementById('prenom'),
+      ajouter: document.getElementById('ajouterBtn'),
+      choix: document.getElementById('choixProfils'),
+      selection: document.getElementById('selectionActive'),
+      nom: document.getElementById('nomActif'),
+      solde: document.getElementById('soldeActif'),
+      actualiser: document.getElementById('actualiserBtn'),
+      continuer: document.getElementById('continuerBtn'),
+      changer: document.getElementById('changerBtn')
+    };
+
+    function afficherStatut(message, type = '') {
+      elements.statut.textContent = message;
+      elements.statut.className = 'statut ' + type;
+    }
+
+    function convertirEntier(valeur) {
+      const nombre = Number(valeur);
+      return Number.isFinite(nombre) ? Math.trunc(nombre) : 0;
+    }
+
+    function formaterPieces(nombre) {
+      const total = convertirEntier(nombre);
+      return total + (total === 1 ? ' pièce d’or' : ' pièces d’or');
+    }
+
+    function lireProfilLocal() {
+      try {
+        return JSON.parse(localStorage.getItem(CLE_PROFIL) || 'null');
+      } catch (erreur) {
+        localStorage.removeItem(CLE_PROFIL);
+        return null;
+      }
+    }
+
+    function sauvegarderProfilLocal(profil) {
+      const profilLocal = {
+        id: profil.id,
+        prenom: profil.prenom,
+        piecesOr: convertirEntier(profil.piecesOr ?? profil.solde),
+        derniereMiseAJour: new Date().toISOString()
+      };
+
+      localStorage.setItem(CLE_PROFIL, JSON.stringify(profilLocal));
+      return profilLocal;
+    }
+
+    async function envoyerGet(action, parametres = {}) {
+      const url = new URL(API_URL);
+      url.searchParams.set('action', action);
+
+      Object.entries(parametres).forEach(([cle, valeur]) => {
+        url.searchParams.set(cle, valeur);
+      });
+
+      const reponse = await fetch(url, {
+        method: 'GET',
+        cache: 'no-store'
+      });
+
+      if (!reponse.ok) {
+        throw new Error('Le serveur ne répond pas correctement.');
+      }
+
+      return reponse.json();
+    }
+
+    async function envoyerPost(donnees) {
+      const reponse = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain;charset=utf-8'
+        },
+        body: JSON.stringify(donnees)
+      });
+
+      if (!reponse.ok) {
+        throw new Error('Le serveur ne répond pas correctement.');
+      }
+
+      return reponse.json();
+    }
+
+    function selectionnerProfil(profil) {
+      const profilLocal = sauvegarderProfilLocal(profil);
+
+      elements.nom.textContent = profilLocal.prenom;
+      elements.solde.textContent = formaterPieces(profilLocal.piecesOr);
+      elements.selection.classList.add('visible');
+      elements.choix.hidden = true;
+    }
+
+    function afficherChoixProfils() {
+      elements.selection.classList.remove('visible');
+      elements.choix.hidden = false;
+    }
+
+    function creerBoutonProfil(profil) {
+      const bouton = document.createElement('button');
+      bouton.type = 'button';
+      bouton.className = 'profil';
+
+      const nom = document.createElement('span');
+      nom.className = 'nom';
+      nom.textContent = '👤 ' + profil.prenom;
+
+      const solde = document.createElement('span');
+      solde.className = 'solde';
+      solde.textContent =
+        '🪙 ' + formaterPieces(profil.piecesOr ?? profil.solde);
+
+      bouton.append(nom, solde);
+      bouton.addEventListener('click', () => selectionnerProfil(profil));
+
+      return bouton;
+    }
+
+    function afficherProfils(profils) {
+      elements.liste.innerHTML = '';
+
+      if (!profils.length) {
+        afficherStatut(
+          'Aucun profil. Ajoutez le premier prénom.',
+          ''
+        );
+        afficherChoixProfils();
+        return;
+      }
+
+      afficherStatut(
+        profils.length + (profils.length === 1 ? ' profil disponible' : ' profils disponibles'),
+        'succes'
+      );
+
+      profils.forEach(profil => {
+        elements.liste.appendChild(creerBoutonProfil(profil));
+      });
+
+      const profilMemorise = lireProfilLocal();
+
+      if (!profilMemorise) {
+        afficherChoixProfils();
+        return;
+      }
+
+      const profilActualise = profils.find(
+        profil => profil.id === profilMemorise.id
+      );
+
+      if (profilActualise) {
+        selectionnerProfil(profilActualise);
+      } else {
+        localStorage.removeItem(CLE_PROFIL);
+        afficherChoixProfils();
+      }
+    }
+
+    async function chargerProfils() {
+      if (!API_URL.startsWith('https://script.google.com/macros/s/')) {
+        afficherStatut(
+          'L’adresse Apps Script n’est pas configurée.',
+          'erreur'
+        );
+        return;
+      }
+
+      document.body.classList.add('chargement');
+      afficherStatut('Chargement des profils…');
+
+      try {
+        const resultat = await envoyerGet('listerProfils');
+
+        if (!resultat.ok) {
+          throw new Error(resultat.erreur || 'Impossible de charger les profils.');
+        }
+
+        afficherProfils(Array.isArray(resultat.profils) ? resultat.profils : []);
+
+      } catch (erreur) {
+        afficherChoixProfils();
+        afficherStatut(
+          erreur.message || 'Erreur de connexion.',
+          'erreur'
+        );
+
+      } finally {
+        document.body.classList.remove('chargement');
+      }
+    }
+
+    elements.form.addEventListener('submit', async evenement => {
+      evenement.preventDefault();
+
+      const prenom = elements.prenom.value.trim();
+
+      if (prenom.length < 2) {
+        afficherStatut(
+          'Le prénom doit contenir au moins 2 caractères.',
+          'erreur'
+        );
+        return;
+      }
+
+      elements.ajouter.disabled = true;
+      afficherStatut('Création du profil…');
+
+      try {
+        const resultat = await envoyerPost({
+          action: 'creerProfil',
+          prenom: prenom
+        });
+
+        if (!resultat.ok) {
+          throw new Error(resultat.erreur || 'Impossible de créer le profil.');
+        }
+
+        elements.form.reset();
+        selectionnerProfil(resultat.profil);
+
+      } catch (erreur) {
+        afficherStatut(
+          erreur.message || 'Erreur pendant la création.',
+          'erreur'
+        );
+
+      } finally {
+        elements.ajouter.disabled = false;
+      }
+    });
+
+    elements.changer.addEventListener('click', () => {
+      localStorage.removeItem(CLE_PROFIL);
+      afficherChoixProfils();
+      chargerProfils();
+    });
+
+    elements.actualiser.addEventListener('click', chargerProfils);
+
+    elements.continuer.addEventListener('click', () => {
+      const profil = lireProfilLocal();
+
+      if (!profil || !profil.id) {
+        afficherChoixProfils();
+        afficherStatut(
+          'Sélectionnez d’abord un joueur.',
+          'erreur'
+        );
+        return;
+      }
+
+      window.location.href = URL_VITRINE;
+    });
+
+    chargerProfils();
+  </script>
+</body>
+</html>
