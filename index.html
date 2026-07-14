@@ -1,36 +1,800 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vitrine enchantée</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-    /* Bouton retour */
-        .back-btn {
-            display: block;
-            text-align: center;
-            margin: 60px auto 40px;
-            padding: 14px 40px;
-            background: #6b7280;
-            color: white;
-            text-decoration: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-           }
-   </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#8a572f">
+  <title>La Vitrine enchantée</title>
+  <style>
+    :root {
+      --bois-fonce: #5a321d;
+      --bois: #8a572f;
+      --bois-clair: #bd8251;
+      --creme: #fff8e8;
+      --or: #f0c64f;
+      --or-fonce: #9b681e;
+      --rose: #e95291;
+      --rose-fonce: #bd2f70;
+      --vert: #2f8658;
+      --rouge: #b63f3f;
+      --texte: #3e2b20;
+      --ombre: 0 14px 32px rgba(61, 34, 17, .22);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--texte);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(255,255,255,.75), transparent 25%),
+        linear-gradient(145deg, #f8ead4 0%, #ead0aa 48%, #f6e5ca 100%);
+    }
+
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    .retour-accueil {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 50;
+      width: 58px;
+      height: 58px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #4a7ccc;
+      color: #fff;
+      text-decoration: none;
+      text-align: center;
+      font-size: .67rem;
+      line-height: 1.04;
+      font-weight: 900;
+      box-shadow: 0 5px 14px rgba(0,0,0,.3);
+      transition: transform .15s ease, filter .15s ease;
+    }
+
+    .retour-accueil:hover { filter: brightness(1.08); }
+    .retour-accueil:active { transform: scale(.94); }
+
+    .page {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 16px 14px 34px;
+    }
+
+    .entete {
+      position: relative;
+      overflow: hidden;
+      min-height: 195px;
+      padding: 26px 22px 20px;
+      border: 5px solid var(--bois-fonce);
+      border-radius: 26px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.08), transparent 25%, rgba(255,255,255,.06) 60%, transparent),
+        repeating-linear-gradient(4deg, var(--bois) 0 18px, #7b4928 19px 22px, #955f36 23px 40px);
+      box-shadow: var(--ombre), inset 0 0 0 3px rgba(255,255,255,.13);
+      color: #fffaf0;
+      text-align: center;
+    }
+
+    .entete::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 0%, rgba(255,232,155,.28), transparent 42%);
+    }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      margin: 0;
+      font-family: Georgia, serif;
+      font-size: clamp(2rem, 7vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: .03em;
+      text-shadow: 0 3px 6px rgba(0,0,0,.35);
+    }
+
+    .sous-titre {
+      position: relative;
+      z-index: 1;
+      margin: 8px auto 18px;
+      max-width: 650px;
+      font-size: clamp(.95rem, 3vw, 1.15rem);
+      color: #ffeec3;
+      font-weight: 700;
+    }
+
+    .barre-profil {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 44px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.38);
+      color: #fff;
+      font-weight: 900;
+      backdrop-filter: blur(3px);
+    }
+
+    .badge-solde {
+      background: #fff5c9;
+      color: #765016;
+      border-color: #f1d66f;
+      box-shadow: inset 0 -3px 0 rgba(155,104,30,.12);
+    }
+
+    .petit-bouton {
+      min-height: 42px;
+      padding: 8px 15px;
+      border: 1px solid rgba(255,255,255,.45);
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .petit-bouton:hover { background: rgba(255,255,255,.22); }
+
+    .alerte {
+      display: none;
+      margin: 14px 0 0;
+      padding: 13px 15px;
+      border-radius: 15px;
+      background: #fff4cc;
+      border: 2px solid #e3b840;
+      color: #69490e;
+      text-align: center;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+
+    .alerte.visible { display: block; }
+    .alerte a { color: #69490e; }
+
+    .onglets {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 18px 0 15px;
+    }
+
+    .onglet {
+      min-height: 48px;
+      border: 2px solid #d4ad72;
+      border-radius: 999px;
+      padding: 9px 18px;
+      background: rgba(255,255,255,.78);
+      color: #70441f;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(76,44,20,.1);
+    }
+
+    .onglet.actif {
+      background: linear-gradient(135deg, var(--rose), var(--rose-fonce));
+      color: white;
+      border-color: #d64283;
+    }
+
+    .panneau[hidden] { display: none; }
+
+    .catalogue {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .objet {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      padding: 11px;
+      border: 5px solid var(--bois-fonce);
+      border-radius: 20px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.08), transparent),
+        repeating-linear-gradient(2deg, #8c552e 0 20px, #774323 21px 24px, #9b6035 25px 44px);
+      box-shadow: 0 10px 22px rgba(69,37,17,.21), inset 0 0 0 2px rgba(255,255,255,.12);
+    }
+
+    .objet::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      right: 8px;
+      bottom: 80px;
+      height: 12px;
+      border-radius: 8px;
+      background: #4d2a18;
+      box-shadow: 0 5px 7px rgba(0,0,0,.28), inset 0 2px 0 rgba(255,255,255,.12);
+    }
+
+    .cadre-image {
+      position: relative;
+      z-index: 1;
+      aspect-ratio: 1 / 1;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at 50% 26%, #fffdf2, #eadbc0 68%, #ccb18c);
+      border: 3px solid #d3a968;
+      box-shadow: inset 0 0 18px rgba(86,48,22,.18), 0 5px 12px rgba(0,0,0,.2);
+    }
+
+    .cadre-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      transition: transform .25s ease;
+    }
+
+    .objet:hover .cadre-image img { transform: scale(1.035); }
+
+    .etiquette {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      margin: 12px 3px 2px;
+      padding: 13px 11px 10px;
+      border-radius: 13px;
+      background: var(--creme);
+      border: 2px solid #e4c794;
+      text-align: center;
+      box-shadow: 0 4px 11px rgba(39,21,10,.16);
+    }
+
+    .nom-objet {
+      margin: 0 0 7px;
+      font-family: Georgia, serif;
+      font-size: 1.18rem;
+      line-height: 1.15;
+      color: #4b2f1c;
+    }
+
+    .description {
+      min-height: 64px;
+      margin: 0;
+      color: #765c49;
+      font-size: .9rem;
+      line-height: 1.4;
+    }
+
+    .prix {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      margin: 11px 0 9px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: linear-gradient(#fff4a8, #e6bb38);
+      border: 2px solid #b88817;
+      color: #674407;
+      font-size: 1.08rem;
+      font-weight: 1000;
+      box-shadow: inset 0 2px 0 rgba(255,255,255,.65), 0 3px 7px rgba(91,60,8,.2);
+    }
+
+    .acheter {
+      width: 100%;
+      min-height: 49px;
+      border: 0;
+      border-radius: 14px;
+      padding: 9px 12px;
+      background: linear-gradient(135deg, var(--rose), var(--rose-fonce));
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 12px rgba(189,47,112,.3), inset 0 1px 0 rgba(255,255,255,.35);
+      transition: transform .15s ease, filter .15s ease;
+    }
+
+    .acheter:hover:not(:disabled) { filter: brightness(1.07); transform: translateY(-1px); }
+    .acheter:active:not(:disabled) { transform: scale(.97); }
+    .acheter:disabled { cursor: not-allowed; opacity: .62; box-shadow: none; }
+    .acheter.possede { background: linear-gradient(135deg, #3b9a69, #26734d); opacity: 1; }
+
+    .ruban {
+      position: absolute;
+      z-index: 5;
+      top: 23px;
+      right: -42px;
+      width: 170px;
+      padding: 7px 4px;
+      transform: rotate(36deg);
+      background: var(--vert);
+      color: #fff;
+      text-align: center;
+      font-size: .72rem;
+      font-weight: 1000;
+      box-shadow: 0 3px 8px rgba(0,0,0,.25);
+    }
+
+    .collection-vide {
+      padding: 38px 20px;
+      border: 3px dashed #c89f65;
+      border-radius: 20px;
+      background: rgba(255,255,255,.65);
+      text-align: center;
+      font-weight: 800;
+      color: #765531;
+      line-height: 1.5;
+    }
+
+    .collection-vide .grand { display: block; font-size: 3rem; margin-bottom: 8px; }
+
+    .message-flottant {
+      position: fixed;
+      left: 50%;
+      bottom: 22px;
+      z-index: 100;
+      max-width: min(520px, calc(100% - 28px));
+      transform: translate(-50%, 30px);
+      opacity: 0;
+      pointer-events: none;
+      padding: 13px 18px;
+      border-radius: 16px;
+      background: #3d3026;
+      color: #fff;
+      text-align: center;
+      font-weight: 900;
+      box-shadow: 0 8px 25px rgba(0,0,0,.32);
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .message-flottant.visible { opacity: 1; transform: translate(-50%, 0); }
+    .message-flottant.succes { background: #24734b; }
+    .message-flottant.erreur { background: #a33434; }
+
+    .etoile-animation {
+      position: fixed;
+      z-index: 200;
+      pointer-events: none;
+      font-size: 1.6rem;
+      animation: envol 900ms ease-out forwards;
+    }
+
+    @keyframes envol {
+      0% { opacity: 0; transform: translate(-50%, -50%) scale(.4) rotate(0); }
+      20% { opacity: 1; }
+      100% { opacity: 0; transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1.4) rotate(180deg); }
+    }
+
+    .chargement { opacity: .68; pointer-events: none; }
+
+    @media (max-width: 900px) {
+      .catalogue { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 560px) {
+      .page { padding: 8px 8px 26px; }
+      .retour-accueil { width: 50px; height: 50px; top: 5px; left: 5px; font-size: .58rem; }
+      .entete { padding: 22px 10px 16px; border-radius: 20px; }
+      h1 { padding-left: 45px; padding-right: 45px; font-size: clamp(1.65rem, 9vw, 2.35rem); }
+      .sous-titre { margin-top: 6px; }
+      .barre-profil { gap: 7px; }
+      .badge, .petit-bouton { min-height: 40px; font-size: .85rem; padding: 7px 11px; }
+      .onglets { gap: 7px; }
+      .onglet { min-height: 44px; padding: 8px 13px; font-size: .9rem; }
+      .catalogue { grid-template-columns: 1fr; gap: 13px; }
+      .objet { display: grid; grid-template-columns: 42% 58%; gap: 0; padding: 9px; }
+      .objet::before { display: none; }
+      .cadre-image { aspect-ratio: 1 / 1.05; }
+      .etiquette { margin: 0 0 0 8px; padding: 11px 9px 9px; display: flex; flex-direction: column; justify-content: center; }
+      .nom-objet { font-size: 1.03rem; }
+      .description { min-height: 0; font-size: .78rem; }
+      .prix { margin: 7px auto; padding: 5px 9px; font-size: .94rem; }
+      .acheter { min-height: 42px; font-size: .86rem; padding: 7px; }
+      .ruban { top: 18px; right: -52px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+  </style>
 </head>
 <body>
-    <p style="font-size:100px">&#127873;</p>
-    <p style="font-size:100px">Bienvenue dans la vitrine enchantée</p>
-    
-       <a href="https://pierreg78-maker.github.io/loto/" class="back-btn">
-            ← Retour au Loto Bingo
-        </a>
+  <a class="retour-accueil" href="https://pierreg78-maker.github.io/Atelier/">Retour<br>à<br>l’accueil</a>
+
+  <main class="page">
+    <header class="entete">
+      <h1>✨ La Vitrine enchantée ✨</h1>
+      <p class="sous-titre">Dépensez vos pièces d’or et rassemblez une collection extraordinaire.</p>
+
+      <div class="barre-profil">
+        <span class="badge">👤 <span id="nomProfil">Aucun profil</span></span>
+        <span class="badge badge-solde">🪙 <span id="soldeProfil">0</span> pièces d’or</span>
+        <button class="petit-bouton" id="btnChangerProfil" type="button">Changer de profil</button>
+        <a class="petit-bouton" href="https://pierreg78-maker.github.io/loto-bingo/" id="lienLoto" style="text-decoration:none">Jouer au Loto</a>
+      </div>
+    </header>
+
+    <div class="alerte" id="alerteProfil">
+      Aucun joueur n’est sélectionné. Vous pouvez admirer les objets, mais les achats sont désactivés.
+      <a href="profil-demo.html">Choisir un profil</a>
+    </div>
+
+    <nav class="onglets" aria-label="Sections de la vitrine">
+      <button class="onglet actif" type="button" data-panneau="boutique">🛍️ La boutique</button>
+      <button class="onglet" type="button" data-panneau="collection">🎁 Ma collection <span id="compteurCollection">(0)</span></button>
+    </nav>
+
+    <section class="panneau" id="boutique">
+      <div class="catalogue" id="catalogue"></div>
+    </section>
+
+    <section class="panneau" id="collection" hidden>
+      <div class="catalogue" id="grilleCollection"></div>
+      <div class="collection-vide" id="collectionVide" hidden>
+        <span class="grand">🪄</span>
+        Votre collection est encore vide.<br>
+        Jouez au Loto pour gagner des pièces d’or, puis revenez choisir votre premier trésor.
+      </div>
+    </section>
+  </main>
+
+  <div class="message-flottant" id="message" role="status" aria-live="polite"></div>
+
+  <script>
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyh1LbQNETMy0GS7A5SzACTPMYlFEal9W3-XZozkwzIkAAUhlo_InN-5FOrI9eEqPoEeA/exec';
+    const CLE_PROFIL = 'vitrineProfilActif';
+    const CLE_MODE_ANONYME = 'lotoModeAnonyme';
+
+    const CATALOGUE = [
+      {
+        id: 'mondrian',
+        nom: 'Tableau de maître',
+        icone: '🎨',
+        prix: 50,
+        image: 'images/Mondrian.png',
+        description: 'Une œuvre colorée pour donner une touche de grand musée à votre collection.'
+      },
+      {
+        id: 'chat-egyptien',
+        nom: 'Statue du chat égyptien',
+        icone: '🐈‍⬛',
+        prix: 80,
+        image: 'images/chat_egyptien.jpg',
+        description: 'Une mystérieuse relique aux pouvoirs magiques qui protège son propriétaire.'
+      },
+      {
+        id: 'dragon',
+        nom: 'Dragon miniature enchanté',
+        icone: '🐉',
+        prix: 110,
+        image: 'images/dragon.png',
+        description: 'Un petit dragon fidèle et légèrement imprévisible. Gare aux éternuements étincelants !'
+      },
+      {
+        id: 'corvette',
+        nom: 'Corvette de prestige',
+        icone: '🏎️',
+        prix: 150,
+        image: 'images/corvette.png',
+        description: 'Pour faire le kéké dans les couloirs de l’EHPAD. Lunettes de soleil recommandées.'
+      }
+    ];
+
+    const elements = {
+      nom: document.getElementById('nomProfil'),
+      solde: document.getElementById('soldeProfil'),
+      alerte: document.getElementById('alerteProfil'),
+      catalogue: document.getElementById('catalogue'),
+      collection: document.getElementById('grilleCollection'),
+      collectionVide: document.getElementById('collectionVide'),
+      compteur: document.getElementById('compteurCollection'),
+      message: document.getElementById('message'),
+      changer: document.getElementById('btnChangerProfil')
+    };
+
+    let profilActif = null;
+    let achatEnCours = false;
+    let minuterieMessage = null;
+
+    function entier(valeur) {
+      const nombre = Number(valeur);
+      return Number.isFinite(nombre) ? Math.trunc(nombre) : 0;
+    }
+
+    function lireProfilLocal() {
+      try {
+        const profil = JSON.parse(localStorage.getItem(CLE_PROFIL) || 'null');
+        return profil && profil.id ? profil : null;
+      } catch (_) {
+        localStorage.removeItem(CLE_PROFIL);
+        return null;
+      }
+    }
+
+    function sauvegarderProfil(profil) {
+      profilActif = {
+        id: profil.id,
+        prenom: profil.prenom,
+        piecesOr: entier(profil.piecesOr ?? profil.solde),
+        lots: Array.isArray(profil.lots) ? profil.lots : []
+      };
+      localStorage.setItem(CLE_PROFIL, JSON.stringify(profilActif));
+    }
+
+    function idsPossedes() {
+      if (!profilActif || !Array.isArray(profilActif.lots)) return [];
+      return profilActif.lots.map(lot => typeof lot === 'string' ? lot : lot && lot.id).filter(Boolean);
+    }
+
+    function possede(id) {
+      return idsPossedes().includes(id);
+    }
+
+    function afficherMessage(texte, type = '') {
+      clearTimeout(minuterieMessage);
+      elements.message.textContent = texte;
+      elements.message.className = 'message-flottant visible ' + type;
+      minuterieMessage = setTimeout(() => {
+        elements.message.className = 'message-flottant';
+      }, 3600);
+    }
+
+    function creerCarte(objet, modeCollection = false) {
+      const article = document.createElement('article');
+      article.className = 'objet';
+
+      if (possede(objet.id)) {
+        const ruban = document.createElement('div');
+        ruban.className = 'ruban';
+        ruban.textContent = 'DANS MA COLLECTION';
+        article.appendChild(ruban);
+      }
+
+      const cadre = document.createElement('div');
+      cadre.className = 'cadre-image';
+
+      const image = document.createElement('img');
+      image.src = objet.image;
+      image.alt = objet.nom;
+      image.loading = 'lazy';
+      image.onerror = () => {
+        image.remove();
+        cadre.textContent = objet.icone;
+        cadre.style.fontSize = '5rem';
+      };
+      cadre.appendChild(image);
+
+      const etiquette = document.createElement('div');
+      etiquette.className = 'etiquette';
+
+      const titre = document.createElement('h2');
+      titre.className = 'nom-objet';
+      titre.textContent = objet.icone + ' ' + objet.nom;
+
+      const description = document.createElement('p');
+      description.className = 'description';
+      description.textContent = objet.description;
+
+      etiquette.append(titre, description);
+
+      if (!modeCollection) {
+        const prix = document.createElement('div');
+        prix.className = 'prix';
+        prix.textContent = '🪙 ' + objet.prix + ' pièces';
+
+        const bouton = document.createElement('button');
+        bouton.type = 'button';
+        bouton.className = 'acheter';
+        bouton.dataset.lotId = objet.id;
+
+        const estPossede = possede(objet.id);
+        const soldeInsuffisant = profilActif && entier(profilActif.piecesOr) < objet.prix;
+
+        if (estPossede) {
+          bouton.textContent = '✓ Déjà acheté';
+          bouton.classList.add('possede');
+          bouton.disabled = true;
+        } else if (!profilActif) {
+          bouton.textContent = 'Choisir un profil';
+          bouton.disabled = true;
+        } else if (soldeInsuffisant) {
+          bouton.textContent = 'Il manque ' + (objet.prix - entier(profilActif.piecesOr)) + ' pièces';
+          bouton.disabled = true;
+        } else {
+          bouton.textContent = 'Acheter ce trésor';
+          bouton.addEventListener('click', evenement => acheter(objet, evenement.currentTarget));
+        }
+
+        etiquette.append(prix, bouton);
+      }
+
+      article.append(cadre, etiquette);
+      return article;
+    }
+
+    function afficherInterface() {
+      elements.catalogue.innerHTML = '';
+      elements.collection.innerHTML = '';
+
+      if (profilActif) {
+        elements.nom.textContent = profilActif.prenom;
+        elements.solde.textContent = entier(profilActif.piecesOr);
+        elements.alerte.classList.remove('visible');
+      } else {
+        elements.nom.textContent = 'Visiteur';
+        elements.solde.textContent = '0';
+        elements.alerte.classList.add('visible');
+      }
+
+      CATALOGUE.forEach(objet => elements.catalogue.appendChild(creerCarte(objet)));
+
+      const objetsPossedes = CATALOGUE.filter(objet => possede(objet.id));
+      objetsPossedes.forEach(objet => elements.collection.appendChild(creerCarte(objet, true)));
+
+      elements.compteur.textContent = '(' + objetsPossedes.length + ')';
+      elements.collectionVide.hidden = objetsPossedes.length > 0;
+    }
+
+    async function envoyerGet(action, parametres = {}) {
+      const url = new URL(API_URL);
+      url.searchParams.set('action', action);
+      url.searchParams.set('_', Date.now());
+      Object.entries(parametres).forEach(([cle, valeur]) => url.searchParams.set(cle, valeur));
+
+      const reponse = await fetch(url, { method: 'GET', cache: 'no-store' });
+      if (!reponse.ok) throw new Error('Le serveur ne répond pas correctement.');
+      return reponse.json();
+    }
+
+    async function envoyerPost(donnees) {
+      const reponse = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(donnees)
+      });
+      if (!reponse.ok) throw new Error('Le serveur ne répond pas correctement.');
+      return reponse.json();
+    }
+
+    async function actualiserProfil() {
+      const modeAnonyme = localStorage.getItem(CLE_MODE_ANONYME) === '1';
+      if (modeAnonyme) {
+        profilActif = null;
+        afficherInterface();
+        return;
+      }
+
+      const local = lireProfilLocal();
+      if (!local) {
+        profilActif = null;
+        afficherInterface();
+        return;
+      }
+
+      sauvegarderProfil(local);
+      afficherInterface();
+      document.body.classList.add('chargement');
+
+      try {
+        const resultat = await envoyerGet('obtenirProfil', { id: local.id });
+        if (!resultat.ok || !resultat.profil) throw new Error(resultat.erreur || 'Profil introuvable.');
+        sauvegarderProfil(resultat.profil);
+      } catch (erreur) {
+        afficherMessage('Profil affiché hors connexion. ' + erreur.message, 'erreur');
+      } finally {
+        document.body.classList.remove('chargement');
+        afficherInterface();
+      }
+    }
+
+    async function acheter(objet, bouton) {
+      if (achatEnCours || !profilActif || possede(objet.id)) return;
+      if (entier(profilActif.piecesOr) < objet.prix) {
+        afficherMessage('Vous n’avez pas assez de pièces d’or.', 'erreur');
+        return;
+      }
+
+      const confirmation = window.confirm(
+        'Acheter « ' + objet.nom + ' » pour ' + objet.prix + ' pièces d’or ?'
+      );
+      if (!confirmation) return;
+
+      achatEnCours = true;
+      bouton.disabled = true;
+      bouton.textContent = 'Achat en cours…';
+
+      try {
+        const resultat = await envoyerPost({
+          action: 'achat',
+          profilId: profilActif.id,
+          lotId: objet.id
+        });
+
+        if (!resultat.ok) {
+          throw new Error(resultat.erreur || 'Achat impossible.');
+        }
+
+        if (!resultat.profil) {
+          throw new Error('Le serveur n’a pas renvoyé le profil mis à jour.');
+        }
+
+        sauvegarderProfil(resultat.profil);
+        afficherInterface();
+        lancerEtoiles(bouton);
+        afficherMessage('✨ ' + objet.nom + ' rejoint votre collection !', 'succes');
+      } catch (erreur) {
+        afficherMessage(
+          erreur.message === 'Action POST inconnue.'
+            ? 'Le nouveau Code.gs doit être installé avant d’activer les achats.'
+            : erreur.message,
+          'erreur'
+        );
+        afficherInterface();
+      } finally {
+        achatEnCours = false;
+      }
+    }
+
+    function lancerEtoiles(element) {
+      const rectangle = element.getBoundingClientRect();
+      const centreX = rectangle.left + rectangle.width / 2;
+      const centreY = rectangle.top + rectangle.height / 2;
+      const symboles = ['✨', '⭐', '🪙', '💫'];
+
+      for (let i = 0; i < 14; i++) {
+        const etoile = document.createElement('span');
+        etoile.className = 'etoile-animation';
+        etoile.textContent = symboles[i % symboles.length];
+        etoile.style.left = centreX + 'px';
+        etoile.style.top = centreY + 'px';
+        etoile.style.setProperty('--x', (Math.random() * 240 - 120) + 'px');
+        etoile.style.setProperty('--y', (Math.random() * -190 - 30) + 'px');
+        etoile.style.animationDelay = (Math.random() * 130) + 'ms';
+        document.body.appendChild(etoile);
+        setTimeout(() => etoile.remove(), 1200);
+      }
+    }
+
+    document.querySelectorAll('.onglet').forEach(bouton => {
+      bouton.addEventListener('click', () => {
+        document.querySelectorAll('.onglet').forEach(item => item.classList.remove('actif'));
+        document.querySelectorAll('.panneau').forEach(panneau => panneau.hidden = true);
+        bouton.classList.add('actif');
+        document.getElementById(bouton.dataset.panneau).hidden = false;
+      });
+    });
+
+    elements.changer.addEventListener('click', () => {
+      localStorage.removeItem(CLE_MODE_ANONYME);
+      window.location.href = 'profil-demo.html';
+    });
+
+    window.addEventListener('pageshow', actualiserProfil);
+  </script>
 </body>
 </html>
-      
