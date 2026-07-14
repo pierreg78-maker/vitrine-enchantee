@@ -72,12 +72,9 @@
       transition: transform .15s ease, filter .15s ease;
     }
 
-    .retour-accueil::before {
-      content: "←";
-      font-family: Arial, sans-serif;
-      font-size: 2rem;
-      line-height: 1;
-    }
+   .retour-accueil::before{
+    display:none;
+}
 
     .retour-accueil:hover { filter: brightness(1.12); transform: translateY(-1px); }
     .retour-accueil:active { transform: scale(.96); }
@@ -680,7 +677,10 @@
   </style>
 </head>
 <body>
-  <a class="retour-accueil" href="https://pierreg78-maker.github.io/Atelier/">Retour à<br>l’accueil</a>
+  <a class="retour-accueil"
+   href="https://pierreg78-maker.github.io/Atelier/">
+    Retour à<br>l'accueil
+</a>
 
   <main class="page">
     <header class="entete">
